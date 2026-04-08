@@ -22,8 +22,10 @@ class CloneRequest(BaseModel):
                     ip = ip_address(host)
                     if ip.is_private:
                         raise ValueError("Private IPs are not allowed")
-                except ValueError:
-                    pass  # hostname, not IP -- that's fine
+                except ValueError as e:
+                    if "Private IPs" in str(e):
+                        raise
+                    # hostname, not IP -- that's fine
         except Exception as e:
             raise ValueError(f"Invalid URL: {e}")
         return v
